@@ -1,4 +1,4 @@
-package com.example.movieifoodtest.data.database.di
+package com.example.movieifoodtest.di
 
 import androidx.room.Room
 import com.example.movieifoodtest.data.database.AppDatabase

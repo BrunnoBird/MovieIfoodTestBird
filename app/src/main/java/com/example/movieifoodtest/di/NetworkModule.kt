@@ -1,4 +1,4 @@
-package com.example.movieifoodtest.data.network.di
+package com.example.movieifoodtest.di
 
 import com.example.movieifoodtest.BuildConfig
 import com.example.movieifoodtest.data.network.http.createJson

@@ -1,6 +1,6 @@
 package com.example.movieifoodtest.presentation.data
 
-import com.example.movieifoodtest.domain.mapper.toDomainException
+import com.example.movieifoodtest.data.mapper.toDomainException
 import com.example.movieifoodtest.domain.model.DomainError
 import kotlinx.coroutines.test.runTest
 import mockwebserver3.MockResponse

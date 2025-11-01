@@ -1,4 +1,4 @@
-package com.example.movieifoodtest.presentation.movies.di
+package com.example.movieifoodtest.di
 
 import com.example.movieifoodtest.presentation.movies.ui.details.MovieDetailsViewModel
 import com.example.movieifoodtest.presentation.movies.ui.favorites.FavoritesViewModel

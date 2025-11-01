@@ -1,4 +1,4 @@
-package com.example.movieifoodtest.data.repository
+package com.example.movieifoodtest.domain.repository
 
 import com.example.movieifoodtest.domain.model.Movie
 import kotlinx.coroutines.flow.Flow

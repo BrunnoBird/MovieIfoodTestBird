@@ -3,8 +3,8 @@ package com.example.movieifoodtest.presentation.data
 import com.example.movieifoodtest.data.database.FavoriteMovieEntity
 import com.example.movieifoodtest.domain.model.Movie
 import com.example.movieifoodtest.data.network.tmdb.dto.MovieDto
-import com.example.movieifoodtest.domain.mapper.toDomain
-import com.example.movieifoodtest.domain.mapper.toEntity
+import com.example.movieifoodtest.data.mapper.toDomain
+import com.example.movieifoodtest.data.mapper.toEntity
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Test

@@ -1,6 +1,6 @@
-package com.example.movieifoodtest.data.repository.di
+package com.example.movieifoodtest.di
 
-import com.example.movieifoodtest.data.repository.MoviesRepository
+import com.example.movieifoodtest.domain.repository.MoviesRepository
 import com.example.movieifoodtest.data.repository.MoviesRepositoryImpl
 import org.koin.dsl.module
 

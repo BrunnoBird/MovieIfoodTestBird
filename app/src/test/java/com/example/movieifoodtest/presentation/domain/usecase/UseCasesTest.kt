@@ -1,7 +1,7 @@
 package com.example.movieifoodtest.presentation.domain.usecase
 
 import com.example.movieifoodtest.domain.model.Movie
-import com.example.movieifoodtest.data.repository.MoviesRepository
+import com.example.movieifoodtest.domain.repository.MoviesRepository
 import com.example.movieifoodtest.domain.usecase.GetMovieDetailsUseCase
 import com.example.movieifoodtest.domain.usecase.ObserveFavoritesUseCase
 import com.example.movieifoodtest.domain.usecase.SearchMoviesUseCase

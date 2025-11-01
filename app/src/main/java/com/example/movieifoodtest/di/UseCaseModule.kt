@@ -1,4 +1,4 @@
-package com.example.movieifoodtest.domain.di
+package com.example.movieifoodtest.di
 
 import com.example.movieifoodtest.domain.usecase.GetMovieDetailsUseCase
 import com.example.movieifoodtest.domain.usecase.ObserveFavoritesUseCase

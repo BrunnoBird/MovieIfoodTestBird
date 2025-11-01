@@ -1,4 +1,4 @@
-package com.example.movieifoodtest.domain.mapper
+package com.example.movieifoodtest.data.mapper
 
 import com.example.movieifoodtest.data.database.FavoriteMovieEntity
 import com.example.movieifoodtest.data.network.tmdb.ImageUrlBuilder

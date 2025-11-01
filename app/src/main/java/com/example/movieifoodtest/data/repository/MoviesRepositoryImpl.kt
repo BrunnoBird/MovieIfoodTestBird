@@ -3,9 +3,10 @@ package com.example.movieifoodtest.data.repository
 import com.example.movieifoodtest.data.database.FavoriteDao
 import com.example.movieifoodtest.data.network.tmdb.TmdbApi
 import com.example.movieifoodtest.domain.model.Movie
-import com.example.movieifoodtest.domain.mapper.resultCatching
-import com.example.movieifoodtest.domain.mapper.toDomain
-import com.example.movieifoodtest.domain.mapper.toEntity
+import com.example.movieifoodtest.data.mapper.resultCatching
+import com.example.movieifoodtest.data.mapper.toDomain
+import com.example.movieifoodtest.data.mapper.toEntity
+import com.example.movieifoodtest.domain.repository.MoviesRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
