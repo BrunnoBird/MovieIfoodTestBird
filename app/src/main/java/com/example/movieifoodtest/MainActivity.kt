@@ -4,11 +4,9 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material3.Icon
@@ -25,7 +23,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.example.movieifoodtest.domain.model.Movie
@@ -88,12 +85,6 @@ fun MovieIfoodTestApp() {
                     .padding(paddingValues)
                     .fillMaxSize()
             )
-
-            AppDestination.PROFILE -> ProfilePlaceholder(
-                modifier = Modifier
-                    .padding(paddingValues)
-                    .fillMaxSize()
-            )
         }
     }
 
@@ -148,15 +139,4 @@ enum class AppDestination(
 ) {
     HOME("Buscar", Icons.Default.Home),
     FAVORITES("Favoritos", Icons.Default.Favorite),
-    PROFILE("Perfil", Icons.Default.AccountBox),
-}
-
-@Composable
-private fun ProfilePlaceholder(modifier: Modifier = Modifier) {
-    Box(
-        modifier = modifier,
-        contentAlignment = Alignment.Center
-    ) {
-        Text(text = "Área do perfil em construção")
-    }
 }
