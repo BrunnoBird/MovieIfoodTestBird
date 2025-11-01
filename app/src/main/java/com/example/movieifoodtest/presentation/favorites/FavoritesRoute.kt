@@ -1,4 +1,4 @@
-package com.example.movieifoodtest.presentation.movies.ui.list
+package com.example.movieifoodtest.presentation.favorites
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -8,17 +8,15 @@ import com.example.movieifoodtest.domain.model.Movie
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun MoviesListRoute(
+fun FavoritesRoute(
     onMovieSelected: (Movie) -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: MoviesListViewModel = koinViewModel()
+    viewModel: FavoritesViewModel = koinViewModel()
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
-    MoviesListScreen(
+    FavoritesScreen(
         state = state,
-        onQueryChange = viewModel::onQueryChange,
-        onSearch = viewModel::search,
         onMovieSelected = onMovieSelected,
         modifier = modifier
     )

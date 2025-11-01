@@ -28,9 +28,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.example.movieifoodtest.domain.model.Movie
-import com.example.movieifoodtest.presentation.movies.ui.details.MovieDetailsRoute
-import com.example.movieifoodtest.presentation.movies.ui.favorites.FavoritesRoute
-import com.example.movieifoodtest.presentation.movies.ui.list.MoviesListRoute
+import com.example.movieifoodtest.presentation.details.MovieDetailsRoute
+import com.example.movieifoodtest.presentation.favorites.FavoritesRoute
+import com.example.movieifoodtest.presentation.list.MoviesListRoute
 import com.example.movieifoodtest.ui.theme.MovieIfoodTestTheme
 import kotlinx.coroutines.launch
 

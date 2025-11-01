@@ -1,24 +1,31 @@
-package com.example.movieifoodtest.presentation.data
+package com.example.movieifoodtest.data.repository
 
 import com.example.movieifoodtest.data.database.FavoriteDao
 import com.example.movieifoodtest.data.database.FavoriteMovieEntity
 import com.example.movieifoodtest.data.network.tmdb.TmdbApi
 import com.example.movieifoodtest.data.network.tmdb.dto.MovieDto
 import com.example.movieifoodtest.data.network.tmdb.dto.PagedResponse
-import com.example.movieifoodtest.data.repository.MoviesRepositoryImpl
 import com.example.movieifoodtest.domain.model.DomainError
 import com.example.movieifoodtest.domain.model.DomainException
 import com.example.movieifoodtest.domain.model.Movie
 import com.example.movieifoodtest.domain.model.exceptionOrNull
 import com.example.movieifoodtest.domain.model.getOrThrow
-import io.mockk.*
+import io.mockk.MockKAnnotations
+import io.mockk.Runs
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.every
+import io.mockk.just
+import io.mockk.mockk
+import io.mockk.unmockkAll
+import io.mockk.verify
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.After
-import org.junit.Assert.*
+import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import retrofit2.HttpException
@@ -60,12 +67,12 @@ class MoviesRepositoryImplTest {
         val result = repo.search("matrix", 1)
 
         // Assert
-        assertTrue(result.isSuccess)
+        Assert.assertTrue(result.isSuccess)
         val list = result.getOrThrow()
-        assertEquals(1, list.size)
+        Assert.assertEquals(1, list.size)
         val movie = list.first()
-        assertEquals(603L, movie.id)
-        assertEquals("The Matrix", movie.title)
+        Assert.assertEquals(603L, movie.id)
+        Assert.assertEquals("The Matrix", movie.title)
         coVerify(exactly = 1) { api.searchMovies("matrix", 1) }
     }
 
@@ -82,8 +89,8 @@ class MoviesRepositoryImplTest {
 
         val result = repo.details(10L)
 
-        assertTrue(result.isSuccess)
-        assertEquals(10L, result.getOrThrow().id)
+        Assert.assertTrue(result.isSuccess)
+        Assert.assertEquals(10L, result.getOrThrow().id)
         coVerify(exactly = 1) { api.getMovieDetails(10L) }
     }
 
@@ -101,8 +108,8 @@ class MoviesRepositoryImplTest {
 
         val result = repo.toggleFavorite(movie)
 
-        assertTrue(result.isSuccess)
-        assertTrue(result.getOrThrow())
+        Assert.assertTrue(result.isSuccess)
+        Assert.assertTrue(result.getOrThrow())
         coVerify(exactly = 1) {
             dao.upsert(match { it.id == 1L && it.title == "T" && it.rating == 9.0 })
         }
@@ -122,8 +129,8 @@ class MoviesRepositoryImplTest {
 
         val result = repo.toggleFavorite(movie)
 
-        assertTrue(result.isSuccess)
-        assertFalse(result.getOrThrow())
+        Assert.assertTrue(result.isSuccess)
+        Assert.assertFalse(result.getOrThrow())
         coVerify(exactly = 1) { dao.deleteById(2L) }
     }
 
@@ -136,9 +143,9 @@ class MoviesRepositoryImplTest {
 
         val emission = repo.observeFavorites().first()
 
-        assertEquals(1, emission.size)
-        assertEquals(1L, emission.first().id)
-        assertEquals("T", emission.first().title)
+        Assert.assertEquals(1, emission.size)
+        Assert.assertEquals(1L, emission.first().id)
+        Assert.assertEquals("T", emission.first().title)
         verify(exactly = 1) { dao.observeAll() }
     }
 
@@ -154,10 +161,10 @@ class MoviesRepositoryImplTest {
 
         val result = repo.search("x", 1)
 
-        assertTrue(result.isFailure)
+        Assert.assertTrue(result.isFailure)
         val ex = result.exceptionOrNull()
-        assertNotNull(ex)
-        assertEquals(DomainError.Unauthorized, ex?.domain)
+        Assert.assertNotNull(ex)
+        Assert.assertEquals(DomainError.Unauthorized, ex?.domain)
         coVerify(exactly = 1) { api.searchMovies("x", 1) }
     }
 
@@ -167,11 +174,11 @@ class MoviesRepositoryImplTest {
 
         val result = repo.search("any", 1)
 
-        assertTrue(result.isFailure)
+        Assert.assertTrue(result.isFailure)
         val ex = result.exceptionOrNull()
-        assertNotNull(ex)
-        assertTrue(ex is DomainException)
-        assertEquals(DomainError.Unknown("boom"), ex?.domain)
+        Assert.assertNotNull(ex)
+        Assert.assertTrue(ex is DomainException)
+        Assert.assertEquals(DomainError.Unknown("boom"), ex?.domain)
         coVerify(exactly = 1) { api.searchMovies("any", 1) }
     }
 }

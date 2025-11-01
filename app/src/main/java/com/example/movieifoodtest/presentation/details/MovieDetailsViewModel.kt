@@ -1,4 +1,4 @@
-package com.example.movieifoodtest.presentation.movies.ui.details
+package com.example.movieifoodtest.presentation.details
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

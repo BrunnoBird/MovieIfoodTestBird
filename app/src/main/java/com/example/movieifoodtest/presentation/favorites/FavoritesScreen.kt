@@ -1,4 +1,4 @@
-package com.example.movieifoodtest.presentation.movies.ui.favorites
+package com.example.movieifoodtest.presentation.favorites
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement

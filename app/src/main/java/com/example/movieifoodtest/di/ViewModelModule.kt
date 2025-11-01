@@ -1,8 +1,8 @@
 package com.example.movieifoodtest.di
 
-import com.example.movieifoodtest.presentation.movies.ui.details.MovieDetailsViewModel
-import com.example.movieifoodtest.presentation.movies.ui.favorites.FavoritesViewModel
-import com.example.movieifoodtest.presentation.movies.ui.list.MoviesListViewModel
+import com.example.movieifoodtest.presentation.details.MovieDetailsViewModel
+import com.example.movieifoodtest.presentation.favorites.FavoritesViewModel
+import com.example.movieifoodtest.presentation.list.MoviesListViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module

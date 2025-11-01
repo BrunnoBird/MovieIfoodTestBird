@@ -1,4 +1,4 @@
-package com.example.movieifoodtest.presentation.movies.ui.favorites
+package com.example.movieifoodtest.presentation.favorites
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

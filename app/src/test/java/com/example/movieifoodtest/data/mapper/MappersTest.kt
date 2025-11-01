@@ -1,12 +1,9 @@
-package com.example.movieifoodtest.presentation.data
+package com.example.movieifoodtest.data.mapper
 
 import com.example.movieifoodtest.data.database.FavoriteMovieEntity
-import com.example.movieifoodtest.domain.model.Movie
 import com.example.movieifoodtest.data.network.tmdb.dto.MovieDto
-import com.example.movieifoodtest.data.mapper.toDomain
-import com.example.movieifoodtest.data.mapper.toEntity
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNull
+import com.example.movieifoodtest.domain.model.Movie
+import org.junit.Assert
 import org.junit.Test
 
 class MappersTest {
@@ -21,12 +18,12 @@ class MappersTest {
             voteAverage = 8.7
         )
         val m = dto.toDomain()
-        assertEquals(603L, m.id)
-        assertEquals("The Matrix", m.title)
-        assertEquals("Neo discovers the Matrix", m.overview)
+        Assert.assertEquals(603L, m.id)
+        Assert.assertEquals("The Matrix", m.title)
+        Assert.assertEquals("Neo discovers the Matrix", m.overview)
         requireNotNull(m.posterUrl)
         assert(m.posterUrl.endsWith("/w500/poster.jpg") || m.posterUrl.endsWith("w500/poster.jpg"))
-        assertEquals(8.7, m.rating, 0.0)
+        Assert.assertEquals(8.7, m.rating, 0.0)
     }
 
     @Test
@@ -39,11 +36,11 @@ class MappersTest {
             voteAverage = null
         )
         val movie = dto.toDomain()
-        assertEquals(1L, movie.id)
-        assertEquals("", movie.title)
-        assertEquals("", movie.overview)
-        assertNull(movie.posterUrl)
-        assertEquals(0.0, movie.rating, 0.0)
+        Assert.assertEquals(1L, movie.id)
+        Assert.assertEquals("", movie.title)
+        Assert.assertEquals("", movie.overview)
+        Assert.assertNull(movie.posterUrl)
+        Assert.assertEquals(0.0, movie.rating, 0.0)
     }
 
     @Test
@@ -56,11 +53,11 @@ class MappersTest {
             rating = 7.5
         )
         val movie = entity.toDomain()
-        assertEquals(10L, movie.id)
-        assertEquals("Title", movie.title)
-        assertEquals("Overview", movie.overview)
-        assertEquals("http://img", movie.posterUrl)
-        assertEquals(7.5, movie.rating, 0.0)
+        Assert.assertEquals(10L, movie.id)
+        Assert.assertEquals("Title", movie.title)
+        Assert.assertEquals("Overview", movie.overview)
+        Assert.assertEquals("http://img", movie.posterUrl)
+        Assert.assertEquals(7.5, movie.rating, 0.0)
     }
 
     @Test
@@ -73,10 +70,10 @@ class MappersTest {
             rating = 9.0
         )
         val e = movies.toEntity()
-        assertEquals(11L, e.id)
-        assertEquals("T", e.title)
-        assertEquals("O", e.overview)
-        assertEquals("u", e.posterUrl)
-        assertEquals(9.0, e.rating, 0.0)
+        Assert.assertEquals(11L, e.id)
+        Assert.assertEquals("T", e.title)
+        Assert.assertEquals("O", e.overview)
+        Assert.assertEquals("u", e.posterUrl)
+        Assert.assertEquals(9.0, e.rating, 0.0)
     }
 }
