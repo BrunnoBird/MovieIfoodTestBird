@@ -3,6 +3,7 @@ package com.example.movieifoodtest.presentation.movies.ui.details
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.movieifoodtest.domain.model.DomainResult
 import com.example.movieifoodtest.domain.model.Movie
 import com.example.movieifoodtest.domain.usecase.GetMovieDetailsUseCase
 import com.example.movieifoodtest.domain.usecase.ToggleFavoriteUseCase
@@ -22,19 +23,33 @@ class MovieDetailsViewModel(
 
     val state = mutableStateOf(MovieDetailsUiState())
 
-    init { load() }
+    init {
+        load()
+    }
 
     private fun load() = viewModelScope.launch {
         state.value = MovieDetailsUiState(loading = true)
-        details(id)
-            .onSuccess { state.value = MovieDetailsUiState(loading = false, data = it) }
-            .onFailure { state.value = MovieDetailsUiState(loading = false, error = it.message ?: "Unknown error") }
+
+        when (val result = details(id)) {
+            is DomainResult.Success -> {
+                state.value = MovieDetailsUiState(loading = false, data = result.value)
+            }
+
+            is DomainResult.Failure -> {
+                state.value = MovieDetailsUiState(
+                    loading = false,
+                    error = result.exception.message ?: "Unknown error"
+                )
+            }
+        }
     }
 
     fun onToggleFavorite() = viewModelScope.launch {
         state.value.data?.let { movie ->
-            toggleFavorite(movie)
-            // regra simples: sem feedback; se quiser confirmar sucesso/erro, dá pra atualizar estado aqui
+            when (toggleFavorite(movie)) {
+                is DomainResult.Success -> Unit // Toast de feedback tambem adicionado futuramente
+                is DomainResult.Failure -> Unit // Toast de Feedback feedback pode ser adicionado futuramente
+            }
         }
     }
 }

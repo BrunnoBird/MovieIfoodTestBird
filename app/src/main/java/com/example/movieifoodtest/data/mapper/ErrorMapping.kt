@@ -4,6 +4,7 @@ import com.example.movieifoodtest.data.network.http.NetworkError
 import com.example.movieifoodtest.data.network.http.toNetworkError
 import com.example.movieifoodtest.domain.model.DomainError
 import com.example.movieifoodtest.domain.model.DomainException
+import com.example.movieifoodtest.domain.model.DomainResult
 
 fun Throwable.toDomainException(): DomainException {
     return when (val ne = this.toNetworkError()) {
@@ -12,14 +13,19 @@ fun Throwable.toDomainException(): DomainException {
             404 -> DomainException(DomainError.NotFound)
             else -> DomainException(DomainError.Http(ne.code, ne.message))
         }
+
         is NetworkError.Io -> DomainException(DomainError.Network)
         is NetworkError.Unknown -> DomainException(DomainError.Unknown(ne.cause.message))
     }
 }
 
-inline fun <T> resultCatching(block: () -> T): Result<T> =
+inline fun <T> domainResultCatching(block: () -> T): DomainResult<T> =
     try {
-        Result.success(block())
+        DomainResult.success(block())
     } catch (t: Throwable) {
-        Result.failure(t.toDomainException())
+        val domainException = when (t) {
+            is DomainException -> t
+            else -> t.toDomainException()
+        }
+        DomainResult.failure(domainException)
     }

@@ -4,9 +4,13 @@ import com.example.movieifoodtest.data.database.FavoriteDao
 import com.example.movieifoodtest.data.database.FavoriteMovieEntity
 import com.example.movieifoodtest.data.network.tmdb.TmdbApi
 import com.example.movieifoodtest.data.network.tmdb.dto.MovieDto
-import com.example.movieifoodtest.data.repository.MoviesRepositoryImpl
-import com.example.movieifoodtest.domain.model.Movie
 import com.example.movieifoodtest.data.network.tmdb.dto.PagedResponse
+import com.example.movieifoodtest.data.repository.MoviesRepositoryImpl
+import com.example.movieifoodtest.domain.model.DomainError
+import com.example.movieifoodtest.domain.model.DomainException
+import com.example.movieifoodtest.domain.model.Movie
+import com.example.movieifoodtest.domain.model.exceptionOrNull
+import com.example.movieifoodtest.domain.model.getOrThrow
 import io.mockk.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
@@ -132,7 +136,7 @@ class MoviesRepositoryImplTest {
         assertTrue(result.isFailure)
         val ex = result.exceptionOrNull()
         assertNotNull(ex)
-        // opcional: se quiser validar a DomainException especificamente, faça a import e o cast
+        assertEquals(DomainError.Unauthorized, ex?.domain)
         coVerify(exactly = 1) { api.searchMovies("x", 1) }
     }
 
@@ -145,6 +149,8 @@ class MoviesRepositoryImplTest {
         assertTrue(result.isFailure)
         val ex = result.exceptionOrNull()
         assertNotNull(ex)
+        assertTrue(ex is DomainException)
+        assertEquals(DomainError.Unknown("boom"), ex?.domain)
         coVerify(exactly = 1) { api.searchMovies("any", 1) }
     }
 }

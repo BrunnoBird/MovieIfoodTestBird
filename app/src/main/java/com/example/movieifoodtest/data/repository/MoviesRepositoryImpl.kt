@@ -1,11 +1,12 @@
 package com.example.movieifoodtest.data.repository
 
 import com.example.movieifoodtest.data.database.FavoriteDao
-import com.example.movieifoodtest.data.network.tmdb.TmdbApi
-import com.example.movieifoodtest.domain.model.Movie
-import com.example.movieifoodtest.data.mapper.resultCatching
+import com.example.movieifoodtest.data.mapper.domainResultCatching
 import com.example.movieifoodtest.data.mapper.toDomain
 import com.example.movieifoodtest.data.mapper.toEntity
+import com.example.movieifoodtest.data.network.tmdb.TmdbApi
+import com.example.movieifoodtest.domain.model.DomainResult
+import com.example.movieifoodtest.domain.model.Movie
 import com.example.movieifoodtest.domain.repository.MoviesRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -15,18 +16,18 @@ class MoviesRepositoryImpl(
     private val dao: FavoriteDao
 ) : MoviesRepository {
 
-    override suspend fun search(query: String, page: Int): Result<List<Movie>> =
-        resultCatching {
+    override suspend fun search(query: String, page: Int): DomainResult<List<Movie>> =
+        domainResultCatching {
             api.searchMovies(query, page).results.map { it.toDomain() }
         }
 
-    override suspend fun details(id: Long): Result<Movie> =
-        resultCatching {
+    override suspend fun details(id: Long): DomainResult<Movie> =
+        domainResultCatching {
             api.getMovieDetails(id).toDomain()
         }
 
-    override suspend fun toggleFavorite(movie: Movie): Result<Unit> =
-        resultCatching {
+    override suspend fun toggleFavorite(movie: Movie): DomainResult<Unit> =
+        domainResultCatching {
             dao.upsert(movie.toEntity())
         }
 

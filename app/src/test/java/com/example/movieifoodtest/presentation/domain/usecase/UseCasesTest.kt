@@ -1,6 +1,11 @@
 package com.example.movieifoodtest.presentation.domain.usecase
 
+import com.example.movieifoodtest.domain.model.DomainError
+import com.example.movieifoodtest.domain.model.DomainException
+import com.example.movieifoodtest.domain.model.DomainResult
 import com.example.movieifoodtest.domain.model.Movie
+import com.example.movieifoodtest.domain.model.exceptionOrNull
+import com.example.movieifoodtest.domain.model.getOrThrow
 import com.example.movieifoodtest.domain.repository.MoviesRepository
 import com.example.movieifoodtest.domain.usecase.GetMovieDetailsUseCase
 import com.example.movieifoodtest.domain.usecase.ObserveFavoritesUseCase
@@ -43,7 +48,7 @@ class UseCasesTest {
     @Test
     fun `search returns success from repository`() = runTest {
         val list = listOf(Movie(1L, "Matrix", "Neo", null, 8.7))
-        coEvery { repo.search("matrix", 1) } returns Result.success(list)
+        coEvery { repo.search("matrix", 1) } returns DomainResult.success(list)
 
         val result = searchUC("matrix", 1)
 
@@ -54,13 +59,14 @@ class UseCasesTest {
 
     @Test
     fun `search propagates failure from repository`() = runTest {
-        val error = RuntimeException("boom")
-        coEvery { repo.search("x", 2) } returns Result.failure(error)
+        val messageError = "boom"
+        val error = DomainException(DomainError.Unknown(messageError))
+        coEvery { repo.search("x", 2) } returns DomainResult.failure(error)
 
         val result = searchUC("x", 2)
 
         assertTrue(result.isFailure)
-        assertEquals("boom", result.exceptionOrNull()!!.message)
+        assertEquals("Unknown - $messageError", result.exceptionOrNull()?.message)
         coVerify(exactly = 1) { repo.search("x", 2) }
     }
 
@@ -69,7 +75,7 @@ class UseCasesTest {
     @Test
     fun `details returns success from repository`() = runTest {
         val m = Movie(10L, "Inception", "Dreams", null, 9.0)
-        coEvery { repo.details(10L) } returns Result.success(m)
+        coEvery { repo.details(10L) } returns DomainResult.success(m)
 
         val result = detailsUC(10L)
 
@@ -80,13 +86,13 @@ class UseCasesTest {
 
     @Test
     fun `details propagates failure from repository`() = runTest {
-        val err = IllegalStateException("not found")
-        coEvery { repo.details(99L) } returns Result.failure(err)
+        val err = DomainException(DomainError.NotFound)
+        coEvery { repo.details(99L) } returns DomainResult.failure(err)
 
         val result = detailsUC(99L)
 
-        assertTrue(result.isFailure)
-        assertEquals("not found", result.exceptionOrNull()!!.message)
+        assertEquals("NotFound", result.exceptionOrNull()?.message)
+        assertEquals(DomainError.NotFound, result.exceptionOrNull()?.domain)
         coVerify(exactly = 1) { repo.details(99L) }
     }
 
@@ -95,7 +101,7 @@ class UseCasesTest {
     @Test
     fun `toggleFavorite returns success from repository`() = runTest {
         val m = Movie(1L, "T", "O", null, 7.0)
-        coEvery { repo.toggleFavorite(m) } returns Result.success(Unit)
+        coEvery { repo.toggleFavorite(m) } returns DomainResult.success(Unit)
 
         val result = toggleFavUC(m)
 
@@ -106,13 +112,13 @@ class UseCasesTest {
     @Test
     fun `toggleFavorite propagates failure from repository`() = runTest {
         val m = Movie(2L, "X", "Y", null, 5.0)
-        val err = RuntimeException("db failed")
-        coEvery { repo.toggleFavorite(m) } returns Result.failure(err)
+        val err = DomainException(DomainError.Unknown("db failed"))
+        coEvery { repo.toggleFavorite(m) } returns DomainResult.failure(err)
 
         val result = toggleFavUC(m)
 
         assertTrue(result.isFailure)
-        assertEquals("db failed", result.exceptionOrNull()!!.message)
+        assertEquals(DomainError.Unknown("db failed"), result.exceptionOrNull()?.domain)
         coVerify(exactly = 1) { repo.toggleFavorite(m) }
     }
 
