@@ -78,6 +78,8 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.retrofit.converter.kotlinx)
     implementation(libs.bundles.room)
+    implementation(libs.androidx.lifecycle.runtime.compose)
+    implementation(libs.coil.compose)
 
     //Test
     testImplementation(libs.junit)
