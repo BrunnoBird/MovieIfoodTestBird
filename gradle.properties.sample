@@ -1,0 +1,8 @@
+# Copy this file to gradle.properties and fill in your own TMDB credentials.
+# Do not commit your real keys to version control.
+
+# TMDB API credentials
+# https://developer.themoviedb.org/reference/intro/authentication
+# Required to authenticate requests made by the app.
+tmdb.bearer=YOUR_TMDB_BEARER_TOKEN
+tmdb.api_key=YOUR_TMDB_API_KEY
