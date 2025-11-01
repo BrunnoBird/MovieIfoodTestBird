@@ -1,0 +1,32 @@
+package com.example.movieifoodtest.feature.movies.data
+
+import com.example.movieifoodtest.core.database.FavoriteDao
+import com.example.movieifoodtest.core.network.tmdb.TmdbApi
+import com.example.movieifoodtest.feature.movies.domain.Movie
+import com.example.movieifoodtest.feature.movies.domain.MoviesRepository
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
+
+class MoviesRepositoryImpl(
+    private val api: TmdbApi,
+    private val dao: FavoriteDao
+) : MoviesRepository {
+
+    override suspend fun search(query: String, page: Int): Result<List<Movie>> =
+        resultCatching {
+            api.searchMovies(query, page).results.map { it.toDomain() }
+        }
+
+    override suspend fun details(id: Long): Result<Movie> =
+        resultCatching {
+            api.getMovieDetails(id).toDomain()
+        }
+
+    override suspend fun toggleFavorite(movie: Movie): Result<Unit> =
+        resultCatching {
+            dao.upsert(movie.toEntity())
+        }
+
+    override fun observeFavorites(): Flow<List<Movie>> =
+        dao.observeAll().map { list -> list.map { it.toDomain() } }
+}

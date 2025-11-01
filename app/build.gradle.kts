@@ -75,6 +75,7 @@ dependencies {
     implementation(libs.retrofit)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.retrofit.converter.kotlinx)
+    implementation(libs.bundles.room)
 
     //Test
     testImplementation(libs.junit)
@@ -84,6 +85,7 @@ dependencies {
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
+    testImplementation(libs.retrofit)
 
     testImplementation(libs.okhttp.mockwebserver3)
     androidTestImplementation(libs.okhttp.mockwebserver3)
