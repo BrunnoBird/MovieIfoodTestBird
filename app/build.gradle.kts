@@ -28,7 +28,6 @@ android {
         // Base URLs (TMDB v3 e imagens w500)
         buildConfigField("String", "TMDB_BASE_URL", "\"https://api.themoviedb.org/3/\"")
         buildConfigField("String", "TMDB_IMG_BASE", "\"https://image.tmdb.org/t/p/\"")
-
         buildConfigField("String", "TMDB_BEARER", "\"${project.properties["tmdb.bearer"] ?: ""}\"")
         buildConfigField("String", "TMDB_API_KEY", "\"${project.properties["tmdb.api_key"] ?: ""}\"")
     }
