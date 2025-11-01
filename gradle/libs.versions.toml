@@ -41,16 +41,16 @@ androidx-compose-material3-adaptive-navigation-suite = { group = "androidx.compo
 androidx-compose-material-icons-core = { group = "androidx.compose.material", name = "material-icons-core" }
 androidx-compose-material-icons-extended = { group = "androidx.compose.material", name = "material-icons-extended" }
 kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutinesTest" }
-koin-test = { group = "io.insert-koin", name = "koin-test", version.ref = "koinTest" }
-koin-test-junit4 = { group = "io.insert-koin", name = "koin-test-junit4", version.ref = "koinTest" }
 truth = { group = "com.google.truth", name = "truth", version.ref = "truth" }
 mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
 mockk-agent = { group = "io.mockk", name = "mockk-agent", version.ref = "mockk" }
 
 # Koin
-koin-core = { group = "io.insert-koin", name = "koin-core", version.ref = "koin" }
-koin-android = { group = "io.insert-koin", name = "koin-android", version.ref = "koin" }
+koin-core = { group = "io.insert-koin", name = "koin-androidx-compose", version.ref = "koin" }
+koin-android = { group = "io.insert-koin", name = "koin-androidx-viewmodel", version.ref = "koin" }
 koin-androidx-compose = { group = "io.insert-koin", name = "koin-androidx-compose", version.ref = "koin" }
+koin-test = { group = "io.insert-koin", name = "koin-test", version.ref = "koinTest" }
+koin-test-junit4 = { group = "io.insert-koin", name = "koin-test-junit4", version.ref = "koinTest" }
 
 # Kotlinx Serialization (runtime JSON)
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerialization" }

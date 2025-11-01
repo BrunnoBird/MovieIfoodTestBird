@@ -1,0 +1,21 @@
+package com.example.movieifoodtest.presentation.movies.di
+
+import com.example.movieifoodtest.presentation.movies.ui.details.MovieDetailsViewModel
+import com.example.movieifoodtest.presentation.movies.ui.favorites.FavoritesViewModel
+import com.example.movieifoodtest.presentation.movies.ui.list.MoviesListViewModel
+import org.koin.core.module.dsl.viewModel
+import org.koin.core.module.dsl.viewModelOf
+import org.koin.dsl.module
+
+
+val viewModelModule = module {
+    viewModelOf(::MoviesListViewModel)
+    viewModelOf(::FavoritesViewModel)
+    viewModel { (id: Long) ->
+        MovieDetailsViewModel(
+            id = id,
+            details = get(),
+            toggleFavorite = get()
+        )
+    }
+}
