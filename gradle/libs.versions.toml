@@ -9,15 +9,18 @@ lifecycleRuntimeKtx = "2.9.4"
 activityCompose = "1.11.0"
 composeBom = "2025.10.01"
 navigation = "2.9.5"
-androidxHilt = "1.3.0"
-daggerHilt = "2.57.2"
-room = "2.8.3"
+room = "2.7.1"
 retrofit = "3.0.0"
 okhttp = "5.3.0"
-moshi = "1.15.2"
 coil = "2.7.0"
 appcompat = "1.7.1"
 material = "1.13.0"
+koin = "4.1.1"
+kotlinxSerialization = "1.8.0"
+coroutinesTest = "1.9.0"
+koinTest = "4.1.1"
+truth = "1.4.4"
+mockk = "1.13.12"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -37,21 +40,35 @@ androidx-compose-material3 = { group = "androidx.compose.material3", name = "mat
 androidx-compose-material3-adaptive-navigation-suite = { group = "androidx.compose.material3", name = "material3-adaptive-navigation-suite" }
 androidx-compose-material-icons-core = { group = "androidx.compose.material", name = "material-icons-core" }
 androidx-compose-material-icons-extended = { group = "androidx.compose.material", name = "material-icons-extended" }
+kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutinesTest" }
+koin-test = { group = "io.insert-koin", name = "koin-test", version.ref = "koinTest" }
+koin-test-junit4 = { group = "io.insert-koin", name = "koin-test-junit4", version.ref = "koinTest" }
+truth = { group = "com.google.truth", name = "truth", version.ref = "truth" }
+mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
+mockk-agent = { group = "io.mockk", name = "mockk-agent", version.ref = "mockk" }
+
+# Koin
+koin-core                   = { group = "io.insert-koin", name = "koin-core", version.ref = "koin" }
+koin-android                = { group = "io.insert-koin", name = "koin-android", version.ref = "koin" }
+koin-androidx-compose       = { group = "io.insert-koin", name = "koin-androidx-compose", version.ref = "koin" }
+
+# Kotlinx Serialization (runtime JSON)
+kotlinx-serialization-json  = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerialization" }
+
+# Retrofit converter para Kotlinx Serialization
+retrofit-converter-kotlinx  = { group = "com.squareup.retrofit2", name = "converter-kotlinx-serialization", version.ref = "retrofit" }
+
+# (Opcional testes de rede)
+okhttp-mockwebserver3       = { group = "com.squareup.okhttp3", name = "mockwebserver3", version.ref = "okhttp" }
 
 # Navigation (Compose)
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigation" }
 
-# Hilt (Core + integração com Compose)
-hilt-android               = { group = "com.google.dagger", name = "hilt-android", version.ref = "daggerHilt" }
-hilt-compiler              = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "daggerHilt" }
-androidx-hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "androidxHilt" }
-
-# Retrofit / OkHttp / Moshi
+# Retrofit / OkHttp
 retrofit            = { group = "com.squareup.retrofit2", name = "retrofit",            version.ref = "retrofit" }
 retrofit-converter-moshi = { group = "com.squareup.retrofit2", name = "converter-moshi",     version.ref = "retrofit" }
 okhttp               = { group = "com.squareup.okhttp3", name = "okhttp",               version.ref = "okhttp" }
 okhttp-logging       = { group = "com.squareup.okhttp3", name = "logging-interceptor",  version.ref = "okhttp" }
-moshi-kotlin         = { group = "com.squareup.moshi",   name = "moshi-kotlin",         version.ref = "moshi" }
 
 # Room
 room-runtime  = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
@@ -67,11 +84,10 @@ androidx-lifecycle-runtime-compose = { group = "androidx.lifecycle", name = "lif
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 
-
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 android-library = { id = "com.android.library", version.ref = "agp" }
 kotlin-kapt     = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
-hilt-android    = { id = "com.google.dagger.hilt.android", version.ref = "daggerHilt" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
