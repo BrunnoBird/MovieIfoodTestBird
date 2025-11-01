@@ -74,8 +74,8 @@ class UseCasesTest {
 
     @Test
     fun `details returns success from repository`() = runTest {
-        val m = Movie(10L, "Inception", "Dreams", null, 9.0)
-        coEvery { repo.details(10L) } returns DomainResult.success(m)
+        val movie = Movie(10L, "Inception", "Dreams", null, 9.0)
+        coEvery { repo.details(10L) } returns DomainResult.success(movie)
 
         val result = detailsUC(10L)
 
@@ -100,26 +100,26 @@ class UseCasesTest {
 
     @Test
     fun `toggleFavorite returns success from repository`() = runTest {
-        val m = Movie(1L, "T", "O", null, 7.0)
-        coEvery { repo.toggleFavorite(m) } returns DomainResult.success(Unit)
+        val movie = Movie(1L, "T", "O", null, 7.0)
+        coEvery { repo.toggleFavorite(movie) } returns DomainResult.success(true)
 
-        val result = toggleFavUC(m)
+        val result = toggleFavUC(movie)
 
         assertTrue(result.isSuccess)
-        coVerify(exactly = 1) { repo.toggleFavorite(m) }
+        coVerify(exactly = 1) { repo.toggleFavorite(movie) }
     }
 
     @Test
     fun `toggleFavorite propagates failure from repository`() = runTest {
-        val m = Movie(2L, "X", "Y", null, 5.0)
+        val movie = Movie(2L, "X", "Y", null, 5.0)
         val err = DomainException(DomainError.Unknown("db failed"))
-        coEvery { repo.toggleFavorite(m) } returns DomainResult.failure(err)
+        coEvery { repo.toggleFavorite(movie) } returns DomainResult.failure(err)
 
-        val result = toggleFavUC(m)
+        val result = toggleFavUC(movie)
 
         assertTrue(result.isFailure)
         assertEquals(DomainError.Unknown("db failed"), result.exceptionOrNull()?.domain)
-        coVerify(exactly = 1) { repo.toggleFavorite(m) }
+        coVerify(exactly = 1) { repo.toggleFavorite(movie) }
     }
 
     // -------- ObserveFavoritesUseCase --------

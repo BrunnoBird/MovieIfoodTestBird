@@ -26,9 +26,16 @@ class MoviesRepositoryImpl(
             api.getMovieDetails(id).toDomain()
         }
 
-    override suspend fun toggleFavorite(movie: Movie): DomainResult<Unit> =
+    override suspend fun toggleFavorite(movie: Movie): DomainResult<Boolean> =
         domainResultCatching {
-            dao.upsert(movie.toEntity())
+            val isFavorite = dao.exists(movie.id)
+            if (isFavorite) {
+                dao.deleteById(movie.id)
+                false
+            } else {
+                dao.upsert(movie.toEntity())
+                true
+            }
         }
 
     override fun observeFavorites(): Flow<List<Movie>> =

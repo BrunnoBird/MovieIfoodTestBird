@@ -1,13 +1,13 @@
 package com.example.movieifoodtest.presentation.movies.ui.list
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.movieifoodtest.domain.model.DomainResult
 import com.example.movieifoodtest.domain.model.Movie
 import com.example.movieifoodtest.domain.usecase.SearchMoviesUseCase
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 data class MoviesListUiState(
@@ -21,27 +21,31 @@ class MoviesListViewModel(
     private val search: SearchMoviesUseCase
 ) : ViewModel() {
 
-    var uiState by mutableStateOf(MoviesListUiState())
-        private set
+    private val _uiState = MutableStateFlow(MoviesListUiState())
+    val uiState: StateFlow<MoviesListUiState> = _uiState
 
     fun onQueryChange(q: String) {
-        uiState = uiState.copy(query = q)
+        _uiState.update { it.copy(query = q) }
     }
 
     fun search() = viewModelScope.launch {
-        val currentQuery = uiState.query.trim()
-        uiState = uiState.copy(loading = true, error = null)
+        val currentQuery = _uiState.value.query.trim()
+        _uiState.update { it.copy(loading = true, error = null) }
 
-        uiState = when (val result = search(currentQuery, 1)) {
-            is DomainResult.Success -> {
-                uiState.copy(loading = false, items = result.value)
-            }
+        val result = search(currentQuery, 1)
 
-            is DomainResult.Failure -> {
-                uiState.copy(
-                    loading = false,
-                    error = result.exception.message ?: "Unknown error"
-                )
+        _uiState.update { currentState ->
+            when (result) {
+                is DomainResult.Success -> {
+                    currentState.copy(loading = false, items = result.value)
+                }
+
+                is DomainResult.Failure -> {
+                    currentState.copy(
+                        loading = false,
+                        error = result.exception.message ?: "Unknown error"
+                    )
+                }
             }
         }
     }

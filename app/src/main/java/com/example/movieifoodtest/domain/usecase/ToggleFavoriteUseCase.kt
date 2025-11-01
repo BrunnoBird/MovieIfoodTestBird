@@ -7,5 +7,5 @@ import com.example.movieifoodtest.domain.repository.MoviesRepository
 class ToggleFavoriteUseCase(
     private val repo: MoviesRepository
 ) {
-    suspend operator fun invoke(movie: Movie): DomainResult<Unit> = repo.toggleFavorite(movie)
+    suspend operator fun invoke(movie: Movie): DomainResult<Boolean> = repo.toggleFavorite(movie)
 }

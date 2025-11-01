@@ -5,6 +5,7 @@ import com.example.movieifoodtest.data.network.http.toNetworkError
 import com.example.movieifoodtest.domain.model.DomainError
 import com.example.movieifoodtest.domain.model.DomainException
 import com.example.movieifoodtest.domain.model.DomainResult
+import kotlinx.coroutines.CancellationException
 
 fun Throwable.toDomainException(): DomainException {
     return when (val ne = this.toNetworkError()) {
@@ -23,6 +24,7 @@ inline fun <T> domainResultCatching(block: () -> T): DomainResult<T> =
     try {
         DomainResult.success(block())
     } catch (t: Throwable) {
+        if (t is CancellationException) throw t
         val domainException = when (t) {
             is DomainException -> t
             else -> t.toDomainException()

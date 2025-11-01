@@ -15,7 +15,7 @@ data class FavoritesUiState(
 class FavoritesViewModel(
     observeFavorites: ObserveFavoritesUseCase
 ) : ViewModel() {
-    val state = observeFavorites()
+    val uiState = observeFavorites()
         .map { FavoritesUiState(it) }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), FavoritesUiState())
 }

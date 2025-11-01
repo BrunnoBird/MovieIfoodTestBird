@@ -88,7 +88,7 @@ class MoviesRepositoryImplTest {
     }
 
     @Test
-    fun `toggleFavorite calls dao upsert`() = runTest {
+    fun `toggleFavorite adds when movie not yet favorite`() = runTest {
         val movie = Movie(
             id = 1L,
             title = "T",
@@ -96,14 +96,35 @@ class MoviesRepositoryImplTest {
             posterUrl = "u",
             rating = 9.0
         )
+        coEvery { dao.exists(1L) } returns false
         coEvery { dao.upsert(any()) } just Runs
 
         val result = repo.toggleFavorite(movie)
 
         assertTrue(result.isSuccess)
+        assertTrue(result.getOrThrow())
         coVerify(exactly = 1) {
             dao.upsert(match { it.id == 1L && it.title == "T" && it.rating == 9.0 })
         }
+    }
+
+    @Test
+    fun `toggleFavorite removes when movie already favorite`() = runTest {
+        val movie = Movie(
+            id = 2L,
+            title = "Existing",
+            overview = "O",
+            posterUrl = "u",
+            rating = 8.0
+        )
+        coEvery { dao.exists(2L) } returns true
+        coEvery { dao.deleteById(2L) } just Runs
+
+        val result = repo.toggleFavorite(movie)
+
+        assertTrue(result.isSuccess)
+        assertFalse(result.getOrThrow())
+        coVerify(exactly = 1) { dao.deleteById(2L) }
     }
 
     @Test
