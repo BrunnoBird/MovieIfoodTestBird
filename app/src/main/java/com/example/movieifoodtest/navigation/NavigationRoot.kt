@@ -3,28 +3,17 @@ package com.example.movieifoodtest.navigation
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation3.runtime.NavEntry
-import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
-import com.example.movieifoodtest.domain.model.Movie
+import com.example.movieifoodtest.navigation.data.callbacks.DetailCallbacks
+import com.example.movieifoodtest.navigation.data.callbacks.FavoritesCallbacks
+import com.example.movieifoodtest.navigation.data.callbacks.SearchCallbacks
+import com.example.movieifoodtest.navigation.data.screens.DetailScreen
+import com.example.movieifoodtest.navigation.data.screens.FavoritesScreen
+import com.example.movieifoodtest.navigation.data.screens.SearchScreen
 import com.example.movieifoodtest.presentation.details.MovieDetailsRoute
 import com.example.movieifoodtest.presentation.favorites.FavoritesRoute
 import com.example.movieifoodtest.presentation.list.MoviesListRoute
-import kotlinx.serialization.Serializable
-
-@Serializable
-data class SearchScreen(val movieId: Long? = null) : NavKey
-
-@Serializable
-data object FavoritesScreen : NavKey
-
-@Serializable
-data class DetailScreen(
-    val id: Long,
-    val onDismiss: () -> Unit = {},
-    val onToggleSuccess: () -> Unit = {},
-    val onToggleFailure: () -> Unit = {}
-) : NavKey
 
 @Composable
 fun NavigationRoot(
@@ -45,17 +34,21 @@ fun NavigationRoot(
                     NavEntry(
                         key = key,
                     ) {
-                        MoviesListRoute(
-                            onMovieSelected = { movie: Movie ->
+                        val callbacks = createSearchCallbacks(
+                            onNavigateToDetail = { movieId ->
                                 backStack.add(
                                     DetailScreen(
-                                        id = movie.id
+                                        id = movieId
                                     )
                                 )
                             },
-                            onFavoriteClick = {
+                            onNavigateToFavorites = {
                                 backStack.add(FavoritesScreen)
                             }
+                        )
+                        MoviesListRoute(
+                            onMovieSelected = callbacks.onMovieSelected,
+                            onFavoriteClick = callbacks.onFavoriteClick,
                         )
                     }
                 }
@@ -63,18 +56,22 @@ fun NavigationRoot(
                 is FavoritesScreen -> {
                     NavEntry(
                         key = key,
-                    ) {
-                        FavoritesRoute(
-                            onMovieSelected = { movie: Movie ->
+                    ) { entry ->
+                        val callbacks = createFavoritesCallbacks(
+                            onNavigateToDetail = { movieId ->
                                 backStack.add(
                                     DetailScreen(
-                                        id = movie.id
+                                        id = movieId
                                     )
                                 )
                             },
-                            onBackClick = {
-                                backStack.remove(it)
+                            onBack = {
+                                backStack.remove(entry)
                             }
+                        )
+                        FavoritesRoute(
+                            onMovieSelected = callbacks.onMovieSelected,
+                            onBackClick = callbacks.onBackClick,
                         )
                     }
                 }
@@ -82,20 +79,19 @@ fun NavigationRoot(
                 is DetailScreen -> {
                     NavEntry(
                         key = key,
-                    ) {
+                    ) { entry ->
+                        val callbacks = createDetailCallbacks(
+                            onClose = {
+                                backStack.remove(entry)
+                            },
+                            onToggleSucceeded = onToggleSuccess,
+                            onToggleFailed = onToggleFailure,
+                        )
                         MovieDetailsRoute(
                             movieId = key.id,
-                            onDismiss = {
-                                backStack.remove(it)
-                            },
-                            onToggleSuccess = { isSuccess ->
-                                backStack.remove(it)
-                                onToggleSuccess()
-                            },
-                            onToggleFailure = { message ->
-                                backStack.remove(it)
-                                onToggleFailure(message)
-                            }
+                            onDismiss = callbacks.onDismiss,
+                            onToggleSuccess = callbacks.onToggleSuccess,
+                            onToggleFailure = callbacks.onToggleFailure,
                         )
                     }
                 }
@@ -103,5 +99,53 @@ fun NavigationRoot(
                 else -> throw RuntimeException("Invalid NavKey.")
             }
         },
+    )
+}
+
+internal fun createSearchCallbacks(
+    onNavigateToDetail: (Long) -> Unit,
+    onNavigateToFavorites: () -> Unit,
+): SearchCallbacks {
+    return SearchCallbacks(
+        onMovieSelected = { movie ->
+            onNavigateToDetail(movie.id)
+        },
+        onFavoriteClick = {
+            onNavigateToFavorites()
+        }
+    )
+}
+
+internal fun createFavoritesCallbacks(
+    onNavigateToDetail: (Long) -> Unit,
+    onBack: () -> Unit,
+): FavoritesCallbacks {
+    return FavoritesCallbacks(
+        onMovieSelected = { movie ->
+            onNavigateToDetail(movie.id)
+        },
+        onBackClick = {
+            onBack()
+        }
+    )
+}
+
+internal fun createDetailCallbacks(
+    onClose: () -> Unit,
+    onToggleSucceeded: () -> Unit,
+    onToggleFailed: (String) -> Unit,
+): DetailCallbacks {
+    return DetailCallbacks(
+        onDismiss = {
+            onClose()
+        },
+        onToggleSuccess = {
+            onClose()
+            onToggleSucceeded()
+        },
+        onToggleFailure = { message ->
+            onClose()
+            onToggleFailed(message)
+        }
     )
 }

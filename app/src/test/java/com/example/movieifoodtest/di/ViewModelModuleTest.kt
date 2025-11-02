@@ -116,6 +116,7 @@ class ViewModelModuleTest {
                 Movie(id = 5L, title = "Movie", overview = "", posterUrl = null, rating = 8.0)
             coEvery { getMovieDetails.invoke(5L) } returns DomainResult.success(movie)
             coEvery { toggleFavorite.invoke(movie) } returns DomainResult.success(true)
+            every { observeFavorites.invoke() } returns flowOf(emptyList())
 
             val viewModel = koinApplication.koin.get<MovieDetailsViewModel> { parametersOf(5L) }
 
