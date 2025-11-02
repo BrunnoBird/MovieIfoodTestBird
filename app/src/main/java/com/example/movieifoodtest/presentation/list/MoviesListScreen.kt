@@ -41,6 +41,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -85,7 +86,7 @@ fun MoviesListScreen(
             OutlinedTextField(
                 value = state.query,
                 onValueChange = onQueryChange,
-                label = { Text("Buscar filmes") },
+                label = { Text(stringResource(R.string.movies_list_screen_label_search_input)) },
                 singleLine = true,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -103,7 +104,7 @@ fun MoviesListScreen(
                 leadingIcon = {
                     Icon(
                         imageVector = Icons.Default.Search,
-                        contentDescription = "Ícone de busca"
+                        contentDescription = null
                     )
                 },
                 colors = OutlinedTextFieldDefaults.colors(
@@ -162,7 +163,7 @@ fun MoviesListScreen(
                                 modifier = Modifier.size(200.dp)
                             )
                             Text(
-                                text = "Nenhum filme foi encontrado",
+                                text = stringResource(R.string.movies_list_screen_text_empty_state_message),
                                 style = MaterialTheme.typography.titleLarge,
                                 color = MaterialTheme.colorScheme.primary,
                             )
@@ -202,7 +203,7 @@ fun MoviesListScreen(
                     null,
                 )
             },
-            text = { Text(text = "Favoritos") },
+            text = { Text(text = stringResource(R.string.movies_list_screen_text_fab)) },
         )
     }
 }
@@ -280,7 +281,10 @@ private fun MovieListItem(
                 )
                 Spacer(modifier = Modifier.height(6.dp))
                 Text(
-                    text = "Nota: %.1f".format(movie.rating),
+                    text = stringResource(
+                        id = R.string.movies_list_screen_text_ratting,
+                        movie.rating
+                    ),
                     style = MaterialTheme.typography.labelMedium,
                     color = MaterialTheme.colorScheme.tertiary
                 )

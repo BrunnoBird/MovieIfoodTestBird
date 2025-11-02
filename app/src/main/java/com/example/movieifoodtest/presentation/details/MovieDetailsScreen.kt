@@ -24,11 +24,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.SubcomposeAsyncImage
+import com.example.movieifoodtest.R
 import com.example.movieifoodtest.domain.model.Movie
 
 @Composable
@@ -52,13 +54,13 @@ fun ErrorContent(
         Spacer(modifier = Modifier.height(16.dp))
 
         Button(onClick = onRetry, modifier = Modifier.fillMaxWidth()) {
-            Text("Tentar novamente")
+            Text(stringResource(R.string.movie_detail_screen_button_error_text))
         }
 
         Spacer(modifier = Modifier.height(8.dp))
 
         TextButton(onClick = onClose) {
-            Text("Fechar")
+            Text(stringResource(R.string.movie_detail_screen_close_button_text))
         }
     }
 }
@@ -131,7 +133,7 @@ fun MovieDetailsContent(
         Spacer(modifier = Modifier.height(12.dp))
 
         Text(
-            text = "Nota dos usuários: %.1f".format(movie.rating),
+            text = stringResource(id = R.string.movie_detail_screen_ratting_text, movie.rating),
             style = MaterialTheme.typography.labelLarge,
             color = MaterialTheme.colorScheme.tertiary,
             modifier = Modifier.fillMaxWidth()
@@ -147,13 +149,19 @@ fun MovieDetailsContent(
             ),
             onClick = { onToggleFavorite() }
         ) {
-            Text(text = if (isFavorite) "Remover dos favoritos" else "Adicionar aos favoritos")
+            Text(
+                text = if (isFavorite) {
+                    stringResource(R.string.movie_detail_screen_button_remove_favorite_text)
+                } else {
+                    stringResource(R.string.movie_detail_screen_button_add_favorite_text)
+                }
+            )
         }
 
         Spacer(modifier = Modifier.height(16.dp))
 
         Text(
-            text = "Os favoritos são sincronizados com sua lista local.",
+            text = stringResource(R.string.movie_detail_screen_information_favorite_text),
             style = MaterialTheme.typography.bodyMedium,
             modifier = Modifier.fillMaxWidth(),
             color = MaterialTheme.colorScheme.onSurfaceVariant

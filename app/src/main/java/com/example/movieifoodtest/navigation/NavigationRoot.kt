@@ -71,6 +71,9 @@ fun NavigationRoot(
                                         id = movie.id
                                     )
                                 )
+                            },
+                            onBackClick = {
+                                backStack.remove(it)
                             }
                         )
                     }

@@ -9,8 +9,9 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun FavoritesRoute(
-    onMovieSelected: (Movie) -> Unit,
     modifier: Modifier = Modifier,
+    onMovieSelected: (Movie) -> Unit,
+    onBackClick: () -> Unit,
     viewModel: FavoritesViewModel = koinViewModel()
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
@@ -18,6 +19,7 @@ fun FavoritesRoute(
     FavoritesScreen(
         state = state,
         onMovieSelected = onMovieSelected,
+        onBackClick = onBackClick,
         modifier = modifier
     )
 }

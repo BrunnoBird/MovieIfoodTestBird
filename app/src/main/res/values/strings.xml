@@ -1,3 +1,23 @@
 <resources>
-    <string name="app_name">MovieIfoodTest</string>
+    <!-- General -->
+    <string name="app_name">Movie Ifood Test</string>
+
+    <!-- Movie List Screen -->
+    <string name="movies_list_screen_label_search_input">Buscar filmes</string>
+    <string name="movies_list_screen_text_empty_state_message">Nenhum filme encontrado</string>
+    <string name="movies_list_screen_text_fab">Favoritos</string>
+    <string name="movies_list_screen_text_ratting">Nota: %.1f</string>
+
+    <!-- Favorite Screen -->
+    <string name="favorite_screen_text_top_app_bar">Favoritos</string>
+    <string name="favorite_screen_content_description_top_app_bar_back_button">Voltar</string>
+    <string name="favorite_screen_text_empty_state">Nenhum favorito adicionado</string>
+
+    <!-- Movie Detail Screen -->
+    <string name="movie_detail_screen_ratting_text">Nota dos usuários: %.1f</string>
+    <string name="movie_detail_screen_button_remove_favorite_text">Remover dos favoritos</string>
+    <string name="movie_detail_screen_button_add_favorite_text">Adicionar aos favoritos</string>
+    <string name="movie_detail_screen_button_error_text">Tentar novamente</string>
+    <string name="movie_detail_screen_close_button_text">Fechar</string>
+    <string name="movie_detail_screen_information_favorite_text">Os favoritos são sincronizados com sua lista local.</string>
 </resources>

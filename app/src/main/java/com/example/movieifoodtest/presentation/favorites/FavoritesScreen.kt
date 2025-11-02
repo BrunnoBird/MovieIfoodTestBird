@@ -18,12 +18,17 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.BrokenImage
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -31,6 +36,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -43,65 +49,87 @@ import com.example.movieifoodtest.domain.model.Movie
 import com.example.movieifoodtest.ui.theme.DarkGray
 import com.example.movieifoodtest.ui.theme.Gray
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FavoritesScreen(
     state: FavoritesUiState,
     onMovieSelected: (Movie) -> Unit,
+    onBackClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    if (state.items.isEmpty()) {
-        Column(
-            modifier = modifier
-                .fillMaxSize()
-                .background(
-                    brush = Brush.verticalGradient(
-                        colors = listOf(
-                            DarkGray,
-                            Gray,
-                            Gray,
+    Scaffold(
+        modifier = modifier,
+        containerColor = MaterialTheme.colorScheme.background,
+        topBar = {
+            TopAppBar(
+                title = { Text(text = stringResource(R.string.favorite_screen_text_top_app_bar)) },
+                navigationIcon = {
+                    IconButton(onClick = onBackClick) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = stringResource(R.string.favorite_screen_content_description_top_app_bar_back_button)
+                        )
+                    }
+                }
+            )
+        }
+    ) { paddingValues ->
+        if (state.items.isEmpty()) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues)
+                    .background(
+                        brush = Brush.verticalGradient(
+                            colors = listOf(
+                                DarkGray,
+                                Gray,
+                                Gray,
+                            )
                         )
                     )
-                )
-                .padding(24.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.lottie_empty_state))
-
-            Column(
+                    .padding(24.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
-                LottieAnimation(
-                    composition = composition,
-                    iterations = 1,
-                    modifier = Modifier.size(200.dp)
-                )
-                Text(
-                    text = "Nenhum favorito adicionado",
-                    style = MaterialTheme.typography.titleLarge,
-                    color = MaterialTheme.colorScheme.primary,
-                )
+                val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.lottie_empty_state))
+
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    LottieAnimation(
+                        composition = composition,
+                        iterations = 1,
+                        modifier = Modifier.size(200.dp)
+                    )
+                    Text(
+                        text = stringResource(R.string.favorite_screen_text_empty_state),
+                        style = MaterialTheme.typography.titleLarge,
+                        color = MaterialTheme.colorScheme.primary,
+                    )
+                }
             }
-        }
-    } else {
-        LazyColumn(
-            modifier = modifier
-                .fillMaxSize()
-                .background(
-                    brush = Brush.verticalGradient(
-                        colors = listOf(
-                            DarkGray,
-                            Gray,
+        } else {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues)
+                    .background(
+                        brush = Brush.verticalGradient(
+                            colors = listOf(
+                                DarkGray,
+                                Gray,
+                            )
                         )
                     )
-                )
-                .padding(horizontal = 16.dp),
-            contentPadding = PaddingValues(vertical = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            items(state.items, key = { it.id }) { movie ->
-                FavoriteItem(movie = movie, onClick = { onMovieSelected(movie) })
+                    .padding(horizontal = 16.dp),
+                contentPadding = PaddingValues(vertical = 16.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                items(state.items, key = { it.id }) { movie ->
+                    FavoriteItem(movie = movie, onClick = { onMovieSelected(movie) })
+                }
             }
         }
     }
@@ -148,7 +176,7 @@ private fun FavoriteItem(
                     Icon(
                         Icons.Filled.BrokenImage,
                         modifier = Modifier.size(40.dp),
-                        contentDescription = movie.title
+                        contentDescription = null
                     )
                 }
             }
@@ -172,7 +200,7 @@ private fun FavoriteItem(
             )
             Spacer(modifier = Modifier.height(6.dp))
             Text(
-                text = "Nota: %.1f".format(movie.rating),
+                text = stringResource(id = R.string.movies_list_screen_text_ratting, movie.rating),
                 style = MaterialTheme.typography.labelMedium,
                 color = MaterialTheme.colorScheme.tertiary
             )
@@ -192,7 +220,8 @@ private fun FavoritesScreenPreview() {
     Surface {
         FavoritesScreen(
             state = sample,
-            onMovieSelected = {}
+            onMovieSelected = {},
+            onBackClick = {}
         )
     }
 }
