@@ -53,4 +53,25 @@ class SearchMoviesUseCaseTest {
         Assert.assertEquals("Unknown - $messageError", result.exceptionOrNull()?.message)
         coVerify(exactly = 1) { repo.search("x", 2) }
     }
+
+    @Test
+    fun `search trims query before calling repository`() = runTest {
+        val list = listOf(Movie(2L, "Matrix Reloaded", "Neo", null, 7.2))
+        coEvery { repo.search("matrix", 1) } returns DomainResult.Companion.success(list)
+
+        val result = searchUC("  matrix  ")
+
+        Assert.assertTrue(result.isSuccess)
+        Assert.assertEquals(list, result.getOrThrow())
+        coVerify(exactly = 1) { repo.search("matrix", 1) }
+    }
+
+    @Test
+    fun `search returns empty list when query only spaces`() = runTest {
+        val result = searchUC("   ")
+
+        Assert.assertTrue(result.isSuccess)
+        Assert.assertTrue(result.getOrThrow().isEmpty())
+        coVerify(exactly = 0) { repo.search(any(), any()) }
+    }
 }
