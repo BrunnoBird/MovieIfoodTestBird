@@ -2,6 +2,7 @@ package com.example.movieifoodtest.presentation.list
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -16,11 +17,16 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.SmallFloatingActionButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -37,90 +43,106 @@ import com.example.movieifoodtest.domain.model.Movie
 
 @Composable
 fun MoviesListScreen(
+    modifier: Modifier = Modifier,
     state: MoviesListUiState,
     onQueryChange: (String) -> Unit,
     onSearch: () -> Unit,
     onMovieSelected: (Movie) -> Unit,
-    modifier: Modifier = Modifier
+    onFavoriteClick: () -> Unit,
 ) {
     val focusManager = LocalFocusManager.current
 
-    Column(
+    Box(
         modifier = modifier
             .fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        OutlinedTextField(
-            value = state.query,
-            onValueChange = onQueryChange,
-            label = { Text("Buscar filmes") },
-            singleLine = true,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
-            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-            keyboardActions = KeyboardActions(
-                onSearch = {
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            OutlinedTextField(
+                value = state.query,
+                onValueChange = onQueryChange,
+                label = { Text("Buscar filmes") },
+                singleLine = true,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+                keyboardActions = KeyboardActions(
+                    onSearch = {
+                        focusManager.clearFocus()
+                        onSearch()
+                    }
+                )
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Button(
+                onClick = {
                     focusManager.clearFocus()
                     onSearch()
+                },
+                modifier = Modifier
+                    .align(Alignment.End)
+                    .padding(horizontal = 16.dp)
+            ) {
+                Text(text = "Buscar")
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            when {
+                state.loading -> {
+                    CircularProgressIndicator()
                 }
-            )
-        )
 
-        Spacer(modifier = Modifier.height(8.dp))
+                state.error != null -> {
+                    Text(
+                        text = state.error,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.error,
+                        modifier = Modifier.padding(horizontal = 16.dp)
+                    )
+                }
 
-        Button(
-            onClick = {
-                focusManager.clearFocus()
-                onSearch()
-            },
-            modifier = Modifier
-                .align(Alignment.End)
-                .padding(horizontal = 16.dp)
-        ) {
-            Text(text = "Buscar")
-        }
+                state.items.isEmpty() -> {
+                    Text(
+                        text = "Nenhum filme encontrado",
+                        style = MaterialTheme.typography.bodyMedium,
+                        modifier = Modifier.padding(horizontal = 16.dp)
+                    )
+                }
 
-        Spacer(modifier = Modifier.height(16.dp))
-
-        when {
-            state.loading -> {
-                CircularProgressIndicator()
-            }
-
-            state.error != null -> {
-                Text(
-                    text = state.error,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.error,
-                    modifier = Modifier.padding(horizontal = 16.dp)
-                )
-            }
-
-            state.items.isEmpty() -> {
-                Text(
-                    text = "Nenhum filme encontrado",
-                    style = MaterialTheme.typography.bodyMedium,
-                    modifier = Modifier.padding(horizontal = 16.dp)
-                )
-            }
-
-            else -> {
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(horizontal = 16.dp),
-                    verticalArrangement = Arrangement.spacedBy(12.dp),
-                    contentPadding = PaddingValues(bottom = 24.dp)
-                ) {
-                    items(state.items, key = { it.id }) { movie ->
-                        MovieListItem(
-                            movie = movie,
-                            onClick = { onMovieSelected(movie) }
-                        )
+                else -> {
+                    LazyColumn(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(horizontal = 16.dp),
+                        verticalArrangement = Arrangement.spacedBy(12.dp),
+                        contentPadding = PaddingValues(bottom = 24.dp)
+                    ) {
+                        items(state.items, key = { it.id }) { movie ->
+                            MovieListItem(
+                                movie = movie,
+                                onClick = { onMovieSelected(movie) }
+                            )
+                        }
                     }
                 }
             }
+        }
+
+        SmallFloatingActionButton(
+            onClick = { onFavoriteClick() },
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(16.dp),
+            containerColor = MaterialTheme.colorScheme.secondaryContainer,
+            contentColor = MaterialTheme.colorScheme.secondary
+        ) {
+            Icon(Icons.Filled.Favorite, "Navegar para tela de favoritos")
         }
     }
 }
@@ -189,7 +211,8 @@ private fun MoviesListScreenPreview() {
             state = sample,
             onQueryChange = {},
             onSearch = {},
-            onMovieSelected = {}
+            onMovieSelected = {},
+            onFavoriteClick = {}
         )
     }
 }

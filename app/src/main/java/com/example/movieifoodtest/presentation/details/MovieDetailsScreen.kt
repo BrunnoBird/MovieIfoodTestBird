@@ -106,7 +106,7 @@ fun MovieDetailsContent(
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        Button(onClick = onToggleFavorite, modifier = Modifier.fillMaxWidth()) {
+        Button(onClick = { onToggleFavorite() }, modifier = Modifier.fillMaxWidth()) {
             Text(text = if (isFavorite) "Remover dos favoritos" else "Adicionar aos favoritos")
         }
 

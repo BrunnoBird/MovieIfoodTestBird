@@ -9,8 +9,9 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun MoviesListRoute(
-    onMovieSelected: (Movie) -> Unit,
     modifier: Modifier = Modifier,
+    onMovieSelected: (Movie) -> Unit,
+    onFavoriteClick: () -> Unit,
     viewModel: MoviesListViewModel = koinViewModel()
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
@@ -20,6 +21,7 @@ fun MoviesListRoute(
         onQueryChange = viewModel::onQueryChange,
         onSearch = viewModel::search,
         onMovieSelected = onMovieSelected,
+        onFavoriteClick = onFavoriteClick,
         modifier = modifier
     )
 }

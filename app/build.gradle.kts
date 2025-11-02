@@ -96,6 +96,12 @@ dependencies {
     implementation(libs.coil.compose)
     kapt(libs.room.compiler)
 
+    //Nav3
+    implementation(libs.androidx.material3.adaptive.navigation3)
+    implementation(libs.nav3.runtime)
+    implementation(libs.nav3.ui)
+    implementation(libs.androidx.lifecycle.viewmodel.nav3)
+
     //Test
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
