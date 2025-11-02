@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -5,6 +7,16 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     id("org.jetbrains.kotlin.kapt")
 }
+
+val localProps = Properties().apply {
+    val file = rootProject.file("local.properties")
+    if (file.exists()) {
+        load(file.inputStream())
+    }
+}
+
+fun propOrDefault(key: String, default: String) =
+    localProps.getProperty(key) ?: default
 
 android {
     namespace = "com.example.movieifoodtest"
@@ -25,11 +37,13 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        // Base URLs (TMDB v3 e imagens w500)
+        val tmdbApiKey = propOrDefault("TMDB_API_KEY", "MISSING_API_KEY")
+        val tmdbBearer = propOrDefault("TMDB_BEARER", "MISSING_BEARER")
+
+        buildConfigField("String", "TMDB_API_KEY", "\"$tmdbApiKey\"")
+        buildConfigField("String", "TMDB_BEARER", "\"$tmdbBearer\"")
         buildConfigField("String", "TMDB_BASE_URL", "\"https://api.themoviedb.org/3/\"")
         buildConfigField("String", "TMDB_IMG_BASE", "\"https://image.tmdb.org/t/p/\"")
-        buildConfigField("String", "TMDB_BEARER", "\"${project.properties["tmdb.bearer"] ?: ""}\"")
-        buildConfigField("String", "TMDB_API_KEY", "\"${project.properties["tmdb.api_key"] ?: ""}\"")
     }
 
     buildTypes {
