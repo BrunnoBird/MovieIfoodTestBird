@@ -25,7 +25,10 @@ fun MovieDetailsRoute(
     onToggleSuccess: (Boolean) -> Unit,
     onToggleFailure: (String) -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: MovieDetailsViewModel = koinViewModel(parameters = { parametersOf(movieId) })
+    viewModel: MovieDetailsViewModel = koinViewModel(
+        key = "movie_details_$movieId",
+        parameters = { parametersOf(movieId) }
+    )
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)

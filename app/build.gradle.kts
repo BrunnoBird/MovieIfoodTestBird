@@ -94,6 +94,7 @@ dependencies {
     implementation(libs.bundles.room)
     implementation(libs.androidx.lifecycle.runtime.compose)
     implementation(libs.coil.compose)
+    implementation(libs.lottie.compose)
     kapt(libs.room.compiler)
 
     //Nav3

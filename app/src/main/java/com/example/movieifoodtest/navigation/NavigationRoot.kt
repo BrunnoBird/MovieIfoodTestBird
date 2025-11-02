@@ -86,7 +86,9 @@ fun NavigationRoot(
                         key = key,
                     ) {
                         MovieDetailsRoute(
-                            viewModel = koinViewModel {
+                            viewModel = koinViewModel(
+                                key = "movie_details_${key.id}"
+                            ) {
                                 parametersOf(key.id)
                             },
                             movieId = key.id,

@@ -20,6 +20,7 @@ truth = "1.4.4"
 mockk = "1.13.12"
 androidxTestCore = "1.6.1"
 robolectric = "4.14"
+lottie = "6.7.1"
 
 nav3Core = "1.0.0-beta01"
 nav3Lifecycle = "1.0.0-alpha01"
@@ -64,9 +65,6 @@ retrofit-converter-kotlinx = { group = "com.squareup.retrofit2", name = "convert
 # (Opcional testes de rede)
 okhttp-mockwebserver3 = { group = "com.squareup.okhttp3", name = "mockwebserver3", version.ref = "okhttp" }
 
-# Navigation (Compose)
-#androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigation" }
-
 # Retrofit / OkHttp
 retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
 okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
@@ -92,6 +90,9 @@ nav3-runtime = { module = "androidx.navigation3:navigation3-runtime", version.re
 nav3-ui = { module = "androidx.navigation3:navigation3-ui", version.ref = "nav3Core" }
 androidx-lifecycle-viewmodel-nav3 = { module = "androidx.lifecycle:lifecycle-viewmodel-navigation3", version.ref = "nav3Lifecycle" }
 androidx-material3-adaptive-navigation3 = { group = "androidx.compose.material3.adaptive", name = "adaptive-navigation3", version.ref = "material3AdaptiveNav3" }
+
+# Lottie
+lottie-compose = { group = "com.airbnb.android", name = "lottie-compose", version.ref = "lottie" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
