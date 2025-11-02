@@ -2,8 +2,8 @@ package com.example.movieifoodtest.presentation.details
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.movieifoodtest.domain.model.DomainResult
 import com.example.movieifoodtest.domain.model.Movie
+import com.example.movieifoodtest.domain.model.fold
 import com.example.movieifoodtest.domain.usecase.GetMovieDetailsUseCase
 import com.example.movieifoodtest.domain.usecase.ToggleFavoriteUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -36,52 +36,48 @@ class MovieDetailsViewModel(
     private fun load() = viewModelScope.launch {
         _uiState.value = MovieDetailsUiState(loading = true)
 
-        when (val result = details(id)) {
-            is DomainResult.Success -> {
-                _uiState.update {
-                    MovieDetailsUiState(
-                        loading = false,
-                        data = result.value
-                    )
-                }
-            }
+        val result = details(id)
 
-            is DomainResult.Failure -> {
-                _uiState.update {
+        _uiState.update {
+            result.fold(
+                onSuccess = { movie ->
                     MovieDetailsUiState(
                         loading = false,
-                        error = result.exception.message ?: "Unknown error"
+                        data = movie
+                    )
+                },
+                onFailure = { error ->
+                    MovieDetailsUiState(
+                        loading = false,
+                        error = error.message ?: "Unknown error"
                     )
                 }
-            }
+            )
         }
     }
 
-    fun retry() {
-        load()
-    }
+    fun retry() = load()
 
     fun onToggleFavorite() = viewModelScope.launch {
         _uiState.value.data?.let { movie ->
-            when (val result = toggleFavorite(movie)) {
-                is DomainResult.Success -> {
-                    _uiState.update { currentState ->
+            val result = toggleFavorite(movie)
+
+            _uiState.update { currentState ->
+                result.fold(
+                    onSuccess = {
                         currentState.copy(
                             isFavorite = currentState.isFavorite,
                             toggleError = null,
                             favoriteChanged = currentState.favoriteChanged
                         )
-                    }
-                }
-
-                is DomainResult.Failure -> {
-                    _uiState.update {
-                        it.copy(
-                            toggleError = result.exception.message ?: "Unknown error",
+                    },
+                    onFailure = { error ->
+                        currentState.copy(
+                            toggleError = error.message ?: "Unknown error",
                             favoriteChanged = null
                         )
                     }
-                }
+                )
             }
         }
     }

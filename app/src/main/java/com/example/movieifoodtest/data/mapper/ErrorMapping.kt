@@ -8,16 +8,21 @@ import com.example.movieifoodtest.domain.model.DomainResult
 import kotlinx.coroutines.CancellationException
 
 fun Throwable.toDomainException(): DomainException {
-    return when (val ne = this.toNetworkError()) {
-        is NetworkError.Http -> when (ne.code) {
-            401 -> DomainException(DomainError.Unauthorized)
-            404 -> DomainException(DomainError.NotFound)
-            else -> DomainException(DomainError.Http(ne.code, ne.message))
-        }
+    if (this is DomainException) return this
+    return DomainException(this.toNetworkError().toDomainError())
+}
 
-        is NetworkError.Io -> DomainException(DomainError.Network)
-        is NetworkError.Unknown -> DomainException(DomainError.Unknown(ne.cause.message))
+internal fun NetworkError.toDomainError(): DomainError = when (this) {
+    is NetworkError.Http -> when (code) {
+        401 -> DomainError.Unauthorized
+        404 -> DomainError.NotFound
+        else -> DomainError.Http(code, message)
     }
+
+    is NetworkError.Io -> DomainError.Network
+    is NetworkError.Unknown -> DomainError.Unknown(
+        cause.message ?: cause.toString()
+    )
 }
 
 inline fun <T> domainResultCatching(block: () -> T): DomainResult<T> =
@@ -25,9 +30,5 @@ inline fun <T> domainResultCatching(block: () -> T): DomainResult<T> =
         DomainResult.success(block())
     } catch (t: Throwable) {
         if (t is CancellationException) throw t
-        val domainException = when (t) {
-            is DomainException -> t
-            else -> t.toDomainException()
-        }
-        DomainResult.failure(domainException)
+        DomainResult.failure(t.toDomainException())
     }

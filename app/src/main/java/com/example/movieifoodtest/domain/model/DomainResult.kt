@@ -14,21 +14,6 @@ sealed class DomainResult<out T> {
     }
 }
 
-inline fun <T> DomainResult<T>.onSuccess(action: (T) -> Unit): DomainResult<T> {
-    if (this is DomainResult.Success) action(value)
-    return this
-}
-
-inline fun <T> DomainResult<T>.onFailure(action: (DomainException) -> Unit): DomainResult<T> {
-    if (this is DomainResult.Failure) action(exception)
-    return this
-}
-
-fun <T> DomainResult<T>.getOrNull(): T? = when (this) {
-    is DomainResult.Success -> value
-    is DomainResult.Failure -> null
-}
-
 fun <T> DomainResult<T>.exceptionOrNull(): DomainException? = when (this) {
     is DomainResult.Success -> null
     is DomainResult.Failure -> exception

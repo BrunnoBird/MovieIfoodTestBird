@@ -44,9 +44,11 @@ class SearchMoviesUseCaseTest {
     @Test
     fun `search propagates failure from repository`() = runTest {
         val messageError = "boom"
-        val error = DomainException(DomainError.Unknown(messageError))
-        coEvery { repo.search("x", 2) } returns DomainResult.Companion.failure(error)
-
+        coEvery { repo.search("x", 2) } returns DomainResult.failure(
+            DomainError.Unknown(
+                messageError
+            )
+        )
         val result = searchUC("x", 2)
 
         Assert.assertTrue(result.isFailure)

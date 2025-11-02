@@ -42,8 +42,7 @@ class ToggleFavoriteUseCaseTest {
     @Test
     fun `toggleFavorite propagates failure from repository`() = runTest {
         val movie = Movie(2L, "X", "Y", null, 5.0)
-        val err = DomainException(DomainError.Unknown("db failed"))
-        coEvery { repo.toggleFavorite(movie) } returns DomainResult.Companion.failure(err)
+        coEvery { repo.toggleFavorite(movie) } returns DomainResult.failure(DomainError.Unknown("db failed"))
 
         val result = toggleFavUC(movie)
 

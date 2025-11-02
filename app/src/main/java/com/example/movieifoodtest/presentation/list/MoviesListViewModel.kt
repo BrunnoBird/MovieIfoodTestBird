@@ -2,8 +2,8 @@ package com.example.movieifoodtest.presentation.list
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.movieifoodtest.domain.model.DomainResult
 import com.example.movieifoodtest.domain.model.Movie
+import com.example.movieifoodtest.domain.model.fold
 import com.example.movieifoodtest.domain.usecase.SearchMoviesUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -35,18 +35,17 @@ class MoviesListViewModel(
         val result = search(currentQuery, 1)
 
         _uiState.update { currentState ->
-            when (result) {
-                is DomainResult.Success -> {
-                    currentState.copy(loading = false, items = result.value)
-                }
-
-                is DomainResult.Failure -> {
+            result.fold(
+                onSuccess = { movies ->
+                    currentState.copy(loading = false, items = movies)
+                },
+                onFailure = { error ->
                     currentState.copy(
                         loading = false,
-                        error = result.exception.message ?: "Unknown error"
+                        error = error.message ?: "Unknown error"
                     )
                 }
-            }
+            )
         }
     }
 }

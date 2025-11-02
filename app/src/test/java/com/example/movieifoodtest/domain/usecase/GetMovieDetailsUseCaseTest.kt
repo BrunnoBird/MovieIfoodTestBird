@@ -32,7 +32,7 @@ class GetMovieDetailsUseCaseTest {
     @Test
     fun `details returns success from repository`() = runTest {
         val movie = Movie(10L, "Inception", "Dreams", null, 9.0)
-        coEvery { repo.details(10L) } returns DomainResult.Companion.success(movie)
+        coEvery { repo.details(10L) } returns DomainResult.success(movie)
 
         val result = detailsUC(10L)
 
@@ -43,8 +43,7 @@ class GetMovieDetailsUseCaseTest {
 
     @Test
     fun `details propagates failure from repository`() = runTest {
-        val err = DomainException(DomainError.NotFound)
-        coEvery { repo.details(99L) } returns DomainResult.Companion.failure(err)
+        coEvery { repo.details(99L) } returns DomainResult.failure(DomainError.NotFound)
 
         val result = detailsUC(99L)
 
