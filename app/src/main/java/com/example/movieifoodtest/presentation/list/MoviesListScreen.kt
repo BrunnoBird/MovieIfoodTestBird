@@ -1,5 +1,6 @@
 package com.example.movieifoodtest.presentation.list
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -15,23 +16,28 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.BrokenImage
 import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material3.Button
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.SmallFloatingActionButton
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
@@ -40,6 +46,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.SubcomposeAsyncImage
 import com.example.movieifoodtest.domain.model.Movie
+import com.example.movieifoodtest.ui.theme.DarkGray
+import com.example.movieifoodtest.ui.theme.Gray
 
 @Composable
 fun MoviesListScreen(
@@ -54,11 +62,20 @@ fun MoviesListScreen(
 
     Box(
         modifier = modifier
-            .fillMaxSize(),
+            .fillMaxSize()
+            .background(
+                brush = Brush.verticalGradient(
+                    colors = listOf(
+                        DarkGray,
+                        Gray,
+                        Gray,
+                    )
+                )
+            ),
     ) {
         Column(
             modifier = Modifier.fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             OutlinedTextField(
                 value = state.query,
@@ -74,79 +91,109 @@ fun MoviesListScreen(
                         focusManager.clearFocus()
                         onSearch()
                     }
+                ),
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.Search,
+                        contentDescription = "Ícone de busca"
+                    )
+                },
+                colors = OutlinedTextFieldDefaults.colors(
+                    cursorColor = MaterialTheme.colorScheme.tertiary,
+                    focusedBorderColor = MaterialTheme.colorScheme.tertiary,
+                    focusedLeadingIconColor = MaterialTheme.colorScheme.tertiary,
+                    focusedLabelColor = MaterialTheme.colorScheme.tertiary,
+                    unfocusedLabelColor = Gray,
+                    unfocusedLeadingIconColor = Gray
                 )
             )
 
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Button(
-                onClick = {
-                    focusManager.clearFocus()
-                    onSearch()
-                },
-                modifier = Modifier
-                    .align(Alignment.End)
-                    .padding(horizontal = 16.dp)
-            ) {
-                Text(text = "Buscar")
-            }
-
             Spacer(modifier = Modifier.height(16.dp))
 
-            when {
-                state.loading -> {
-                    CircularProgressIndicator()
-                }
+            Box(
+                modifier = Modifier
+                    .fillMaxSize(),
+                contentAlignment = Alignment.Center,
+            ) {
+                when {
+                    state.loading -> {
+                        CircularProgressIndicator(
+                            color = MaterialTheme.colorScheme.tertiary,
+                            modifier = Modifier.size(52.dp)
+                        )
+                    }
 
-                state.error != null -> {
-                    Text(
-                        text = state.error,
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.error,
-                        modifier = Modifier.padding(horizontal = 16.dp)
-                    )
-                }
-
-                state.items.isEmpty() -> {
-                    Text(
-                        text = "Nenhum filme encontrado",
-                        style = MaterialTheme.typography.bodyMedium,
-                        modifier = Modifier.padding(horizontal = 16.dp)
-                    )
-                }
-
-                else -> {
-                    LazyColumn(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(horizontal = 16.dp),
-                        verticalArrangement = Arrangement.spacedBy(12.dp),
-                        contentPadding = PaddingValues(bottom = 24.dp)
-                    ) {
-                        items(state.items, key = { it.id }) { movie ->
-                            MovieListItem(
-                                movie = movie,
-                                onClick = { onMovieSelected(movie) }
+                    state.error != null -> {
+                        Box(
+                            modifier = Modifier
+                                .background(
+                                    color = MaterialTheme.colorScheme.primary,
+                                    shape = RoundedCornerShape(8.dp)
+                                ),
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            Text(
+                                text = state.error,
+                                style = MaterialTheme.typography.titleLarge,
+                                color = MaterialTheme.colorScheme.error,
+                                modifier = Modifier.padding(16.dp)
                             )
+                        }
+                    }
+
+                    state.items.isEmpty() -> {
+                        Box(
+                            modifier = Modifier
+                                .background(
+                                    color = MaterialTheme.colorScheme.primary,
+                                    shape = RoundedCornerShape(8.dp)
+                                ),
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            Text(
+                                text = "Nenhum filme encontrado",
+                                style = MaterialTheme.typography.titleLarge,
+                                color = MaterialTheme.colorScheme.tertiary,
+                                modifier = Modifier.padding(16.dp)
+                            )
+                        }
+                    }
+
+                    else -> {
+                        LazyColumn(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(horizontal = 16.dp),
+                            verticalArrangement = Arrangement.spacedBy(12.dp),
+                            contentPadding = PaddingValues(bottom = 24.dp)
+                        ) {
+                            items(state.items, key = { it.id }) { movie ->
+                                MovieListItem(
+                                    movie = movie,
+                                    onClick = { onMovieSelected(movie) }
+                                )
+                            }
                         }
                     }
                 }
             }
         }
 
-        SmallFloatingActionButton(
+        ExtendedFloatingActionButton(
             onClick = { onFavoriteClick() },
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(16.dp),
-            containerColor = MaterialTheme.colorScheme.secondaryContainer,
-            contentColor = MaterialTheme.colorScheme.secondary
-        ) {
-            Icon(
-                Icons.Filled.Favorite,
-                "Navegar para tela de favoritos"
-            )
-        }
+            containerColor = MaterialTheme.colorScheme.tertiary,
+            contentColor = MaterialTheme.colorScheme.primary,
+            icon = {
+                Icon(
+                    Icons.Filled.Favorite,
+                    null,
+                )
+            },
+            text = { Text(text = "Favoritos") },
+        )
     }
 }
 
@@ -159,7 +206,11 @@ private fun MovieListItem(
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .clickable(onClick = onClick)
+            .clickable(onClick = onClick),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.primary,
+            contentColor = MaterialTheme.colorScheme.secondary
+        )
     ) {
         Row(
             modifier = Modifier
@@ -170,7 +221,9 @@ private fun MovieListItem(
             SubcomposeAsyncImage(
                 model = movie.posterUrl,
                 contentDescription = movie.title,
-                modifier = Modifier.size(72.dp),
+                modifier = Modifier
+                    .size(72.dp)
+                    .clip(RoundedCornerShape(8.dp)),
                 contentScale = ContentScale.Crop,
                 loading = {
                     Box(
@@ -179,6 +232,7 @@ private fun MovieListItem(
                         contentAlignment = Alignment.Center
                     ) {
                         CircularProgressIndicator(
+                            color = MaterialTheme.colorScheme.tertiary,
                             modifier = Modifier.size(36.dp)
                         )
                     }
@@ -213,10 +267,11 @@ private fun MovieListItem(
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis
                 )
-                Spacer(modifier = Modifier.height(4.dp))
+                Spacer(modifier = Modifier.height(6.dp))
                 Text(
                     text = "Nota: %.1f".format(movie.rating),
-                    style = MaterialTheme.typography.labelMedium
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.tertiary
                 )
             }
         }

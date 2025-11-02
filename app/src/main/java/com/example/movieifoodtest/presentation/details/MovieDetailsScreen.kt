@@ -13,6 +13,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.BrokenImage
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -99,8 +100,10 @@ fun MovieDetailsContent(
                 ) {
                     Icon(
                         Icons.Filled.BrokenImage,
-                        modifier = Modifier.size(40.dp),
-                        contentDescription = movie.title
+                        modifier = Modifier
+                            .size(100.dp),
+                        contentDescription = movie.title,
+                        tint = MaterialTheme.colorScheme.tertiary,
                     )
                 }
             }
@@ -130,14 +133,19 @@ fun MovieDetailsContent(
         Text(
             text = "Nota dos usuários: %.1f".format(movie.rating),
             style = MaterialTheme.typography.labelLarge,
+            color = MaterialTheme.colorScheme.tertiary,
             modifier = Modifier.fillMaxWidth()
         )
 
         Spacer(modifier = Modifier.height(24.dp))
 
         Button(
-            onClick = { onToggleFavorite() },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.tertiary,
+                contentColor = MaterialTheme.colorScheme.primary
+            ),
+            onClick = { onToggleFavorite() }
         ) {
             Text(text = if (isFavorite) "Remover dos favoritos" else "Adicionar aos favoritos")
         }
@@ -146,7 +154,7 @@ fun MovieDetailsContent(
 
         Text(
             text = "Os favoritos são sincronizados com sua lista local.",
-            style = MaterialTheme.typography.bodySmall,
+            style = MaterialTheme.typography.bodyMedium,
             modifier = Modifier.fillMaxWidth(),
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
