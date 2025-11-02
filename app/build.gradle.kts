@@ -114,4 +114,7 @@ dependencies {
     testImplementation(libs.koin.test.junit4)
     testImplementation(libs.truth)
     testImplementation(libs.mockk)
+
+    testImplementation(libs.androidx.test.core.ktx)
+    testImplementation(libs.robolectric)
 }
