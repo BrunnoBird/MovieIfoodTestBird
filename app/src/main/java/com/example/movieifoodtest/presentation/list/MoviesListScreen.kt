@@ -218,7 +218,7 @@ private fun MovieListItem(
             .fillMaxWidth()
             .clickable(onClick = onClick),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.primary,
+            containerColor = MaterialTheme.colorScheme.primary.copy(alpha = .7f),
             contentColor = MaterialTheme.colorScheme.secondary
         )
     ) {
@@ -243,7 +243,7 @@ private fun MovieListItem(
                     ) {
                         CircularProgressIndicator(
                             color = MaterialTheme.colorScheme.tertiary,
-                            modifier = Modifier.size(36.dp)
+                            modifier = Modifier.size(40.dp)
                         )
                     }
                 },

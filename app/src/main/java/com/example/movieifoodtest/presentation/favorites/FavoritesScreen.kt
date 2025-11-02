@@ -134,7 +134,7 @@ private fun FavoriteItem(
                     contentAlignment = Alignment.Center
                 ) {
                     CircularProgressIndicator(
-                        modifier = Modifier.size(36.dp),
+                        modifier = Modifier.size(40.dp),
                         color = MaterialTheme.colorScheme.tertiary,
                     )
                 }
@@ -147,6 +147,7 @@ private fun FavoriteItem(
                 ) {
                     Icon(
                         Icons.Filled.BrokenImage,
+                        modifier = Modifier.size(40.dp),
                         contentDescription = movie.title
                     )
                 }
