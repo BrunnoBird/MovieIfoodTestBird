@@ -1,13 +1,20 @@
 package com.example.movieifoodtest.presentation.details
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.BrokenImage
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -20,7 +27,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
+import coil.compose.SubcomposeAsyncImage
 import com.example.movieifoodtest.domain.model.Movie
 
 @Composable
@@ -68,13 +75,35 @@ fun MovieDetailsContent(
             .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        AsyncImage(
+        SubcomposeAsyncImage(
             model = movie.posterUrl,
             contentDescription = movie.title,
             modifier = Modifier
                 .fillMaxWidth()
                 .height(220.dp),
-            contentScale = ContentScale.Crop
+            contentScale = ContentScale.Crop,
+            loading = {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator(modifier = Modifier.size(36.dp))
+                }
+            },
+            error = {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        Icons.Filled.BrokenImage,
+                        modifier = Modifier.size(40.dp),
+                        contentDescription = movie.title
+                    )
+                }
+            }
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -106,7 +135,10 @@ fun MovieDetailsContent(
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        Button(onClick = { onToggleFavorite() }, modifier = Modifier.fillMaxWidth()) {
+        Button(
+            onClick = { onToggleFavorite() },
+            modifier = Modifier.fillMaxWidth()
+        ) {
             Text(text = if (isFavorite) "Remover dos favoritos" else "Adicionar aos favoritos")
         }
 
@@ -126,7 +158,13 @@ fun MovieDetailsContent(
 private fun MovieDetailsPreview() {
     Surface {
         MovieDetailsContent(
-            movie = Movie(1, "Matrix", "Neo descobre a Matrix", null, 8.7),
+            movie = Movie(
+                1,
+                "Matrix",
+                "Neo descobre a Matrix",
+                null,
+                8.7
+            ),
             isFavorite = true,
             onToggleFavorite = {}
         )

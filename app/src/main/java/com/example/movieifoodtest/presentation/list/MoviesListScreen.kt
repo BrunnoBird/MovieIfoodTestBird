@@ -18,7 +18,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.BrokenImage
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
@@ -38,7 +38,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
+import coil.compose.SubcomposeAsyncImage
 import com.example.movieifoodtest.domain.model.Movie
 
 @Composable
@@ -142,7 +142,10 @@ fun MoviesListScreen(
             containerColor = MaterialTheme.colorScheme.secondaryContainer,
             contentColor = MaterialTheme.colorScheme.secondary
         ) {
-            Icon(Icons.Filled.Favorite, "Navegar para tela de favoritos")
+            Icon(
+                Icons.Filled.Favorite,
+                "Navegar para tela de favoritos"
+            )
         }
     }
 }
@@ -164,11 +167,34 @@ private fun MovieListItem(
                 .padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            AsyncImage(
+            SubcomposeAsyncImage(
                 model = movie.posterUrl,
                 contentDescription = movie.title,
                 modifier = Modifier.size(72.dp),
-                contentScale = ContentScale.Crop
+                contentScale = ContentScale.Crop,
+                loading = {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(36.dp)
+                        )
+                    }
+                },
+                error = {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            Icons.Filled.BrokenImage,
+                            contentDescription = movie.title,
+                        )
+                    }
+                }
             )
 
             Spacer(modifier = Modifier.width(16.dp))
@@ -202,8 +228,19 @@ private fun MovieListItem(
 private fun MoviesListScreenPreview() {
     val sample = MoviesListUiState(
         items = listOf(
-            Movie(1, "Matrix", "Neo descobre a Matrix", null, 8.7),
-            Movie(2, "Inception", "Um ladrão invade sonhos", null, 9.0)
+            Movie(
+                1, "Matrix",
+                "Neo descobre a Matrix",
+                null,
+                8.7
+            ),
+            Movie(
+                2,
+                "Inception",
+                "Um ladrão invade sonhos",
+                null,
+                9.0
+            )
         )
     )
     Surface {
