@@ -15,7 +15,8 @@ val viewModelModule = module {
         MovieDetailsViewModel(
             id = id,
             details = get(),
-            toggleFavorite = get()
+            toggleFavorite = get(),
+            observeFavorites = get()
         )
     }
 }

@@ -31,10 +31,17 @@ fun MovieDetailsRoute(
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
     LaunchedEffect(state.toggleError) {
-        state.toggleError?.let { onToggleFailure(it) }
+        state.toggleError?.let {
+            onToggleFailure(it)
+            viewModel.onToggleErrorConsumed()
+        }
     }
+
     LaunchedEffect(state.favoriteChanged) {
-        state.favoriteChanged?.let { onToggleSuccess(it) }
+        state.favoriteChanged?.let {
+            onToggleSuccess(it)
+            viewModel.onFavoriteChangeConsumed()
+        }
     }
 
     ModalBottomSheet(

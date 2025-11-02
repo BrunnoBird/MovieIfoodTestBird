@@ -5,9 +5,11 @@ import androidx.lifecycle.viewModelScope
 import com.example.movieifoodtest.domain.model.Movie
 import com.example.movieifoodtest.domain.model.fold
 import com.example.movieifoodtest.domain.usecase.GetMovieDetailsUseCase
+import com.example.movieifoodtest.domain.usecase.ObserveFavoritesUseCase
 import com.example.movieifoodtest.domain.usecase.ToggleFavoriteUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -23,7 +25,8 @@ data class MovieDetailsUiState(
 class MovieDetailsViewModel(
     private val id: Long,
     private val details: GetMovieDetailsUseCase,
-    private val toggleFavorite: ToggleFavoriteUseCase
+    private val toggleFavorite: ToggleFavoriteUseCase,
+    observeFavorites: ObserveFavoritesUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(MovieDetailsUiState())
@@ -31,6 +34,7 @@ class MovieDetailsViewModel(
 
     init {
         load()
+        observeFavorites(observeFavorites)
     }
 
     private fun load() = viewModelScope.launch {
@@ -38,12 +42,13 @@ class MovieDetailsViewModel(
 
         val result = details(id)
 
-        _uiState.update {
+        _uiState.update { currentState ->
             result.fold(
                 onSuccess = { movie ->
                     MovieDetailsUiState(
                         loading = false,
-                        data = movie
+                        data = movie,
+                        isFavorite = currentState.isFavorite
                     )
                 },
                 onFailure = { error ->
@@ -64,11 +69,11 @@ class MovieDetailsViewModel(
 
             _uiState.update { currentState ->
                 result.fold(
-                    onSuccess = {
+                    onSuccess = { favorite ->
                         currentState.copy(
-                            isFavorite = currentState.isFavorite,
+                            isFavorite = favorite,
                             toggleError = null,
-                            favoriteChanged = currentState.favoriteChanged
+                            favoriteChanged = favorite
                         )
                     },
                     onFailure = { error ->
@@ -81,4 +86,20 @@ class MovieDetailsViewModel(
             }
         }
     }
+
+    fun onFavoriteChangeConsumed() {
+        _uiState.update { it.copy(favoriteChanged = null) }
+    }
+
+    fun onToggleErrorConsumed() {
+        _uiState.update { it.copy(toggleError = null) }
+    }
+
+    private fun observeFavorites(observeFavorites: ObserveFavoritesUseCase) =
+        viewModelScope.launch {
+            observeFavorites().collectLatest { favorites ->
+                val isFavorite = favorites.any { it.id == id }
+                _uiState.update { it.copy(isFavorite = isFavorite) }
+            }
+        }
 }
