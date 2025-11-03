@@ -46,6 +46,7 @@ androidx-compose-material-icons-extended = { group = "androidx.compose.material"
 kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutinesTest" }
 truth = { group = "com.google.truth", name = "truth", version.ref = "truth" }
 mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
+mockk-android = { group = "io.mockk", name = "mockk-android", version.ref = "mockk" }
 
 # Koin
 koin-bom = { group = "io.insert-koin", name = "koin-bom", version.ref = "koin" }

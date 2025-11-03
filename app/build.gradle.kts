@@ -65,6 +65,12 @@ android {
     buildFeatures {
         compose = true
     }
+    packaging {
+        resources {
+            excludes += "META-INF/LICENSE.md"
+            excludes += "META-INF/LICENSE-notice.md"
+        }
+    }
 }
 
 dependencies {
@@ -121,6 +127,7 @@ dependencies {
     testImplementation(libs.koin.test.junit4)
     testImplementation(libs.truth)
     testImplementation(libs.mockk)
+    androidTestImplementation(libs.mockk.android)
 
     testImplementation(libs.androidx.test.core.ktx)
     testImplementation(libs.robolectric)
