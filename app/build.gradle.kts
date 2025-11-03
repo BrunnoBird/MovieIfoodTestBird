@@ -124,4 +124,6 @@ dependencies {
 
     testImplementation(libs.androidx.test.core.ktx)
     testImplementation(libs.robolectric)
+
+    testImplementation(libs.turbine)
 }
